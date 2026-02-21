@@ -54,7 +54,7 @@ export default function SettingsPage() {
         block_type,
         user:users!blocked_users_blocked_id_fkey(id, full_name, username, profile_picture)
       `)
-      .eq('blocker_id', user.id)
+      .eq('user_id', user.id)
     
     if (data) {
       setBlockedUsers(data as typeof blockedUsers)

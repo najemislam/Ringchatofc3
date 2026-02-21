@@ -24,7 +24,7 @@ import { formatDistanceToNow } from "date-fns"
 interface Notification {
   id: string
   user_id: string
-  actor_id: string
+  sender_id: string
   type: 'like' | 'comment' | 'save' | 'follow'
   content: string
   is_read: boolean
@@ -49,7 +49,7 @@ export default function NotificationsPage() {
       .from('notifications')
       .select(`
         *,
-        actor:users!notifications_actor_id_fkey(full_name, username, profile_picture)
+        actor:users!notifications_sender_id_fkey(full_name, username, profile_picture)
       `)
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
@@ -117,8 +117,8 @@ export default function NotificationsPage() {
     markAsRead(notification.id)
     if (notification.type === 'follow') {
       router.push('/home/friends?tab=requests')
-    } else if (notification.actor_id) {
-      router.push(`/home/profile?id=${notification.actor_id}`)
+    } else if (notification.sender_id) {
+      router.push(`/home/profile?id=${notification.sender_id}`)
     }
   }
 

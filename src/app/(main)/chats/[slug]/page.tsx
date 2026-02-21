@@ -351,7 +351,7 @@ function ChatView({ conversationId }: { conversationId: string }) {
     const { data: existing } = await supabase
       .from("blocked_users")
       .select("id")
-      .eq("blocker_id", user.id)
+      .eq("user_id", user.id)
       .eq("blocked_id", otherUser.id)
       .maybeSingle()
 
@@ -361,7 +361,7 @@ function ChatView({ conversationId }: { conversationId: string }) {
     }
 
     await supabase.from("blocked_users").insert({
-      blocker_id: user.id,
+      user_id: user.id,
       blocked_id: otherUser.id,
     })
 

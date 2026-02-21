@@ -241,7 +241,7 @@ if (isOwnProfile) {
             supabase.from('friends').select('id').eq('user_id', currentUser.id).eq('friend_id', profileId).maybeSingle(),
             supabase.from('followers').select('id').eq('follower_id', currentUser.id).eq('following_id', profileId).maybeSingle(),
             supabase.from('followers').select('id').eq('follower_id', profileId).eq('following_id', currentUser.id).maybeSingle(),
-            supabase.from('blocked_users').select('id, block_type').eq('blocker_id', currentUser.id).eq('blocked_id', profileId).maybeSingle()
+            supabase.from('blocked_users').select('id, block_type').eq('user_id', currentUser.id).eq('blocked_id', profileId).maybeSingle()
           ])
           setIsFriend(!!friendRes.data)
           setIsFollowing(!!followingRes.data)
@@ -424,7 +424,7 @@ const updateData: Record<string, any> = {
       
       await supabase.from('notifications').insert({
         user_id: profileId,
-        actor_id: currentUser.id,
+        sender_id: currentUser.id,
         type: 'follow',
         content: 'started following you'
       })
@@ -530,7 +530,7 @@ const updateData: Record<string, any> = {
                           onClick={async () => {
                             if (!currentUser || !profileId) return
                             const supabase = createClient()
-                            await supabase.from('blocked_users').delete().eq('blocker_id', currentUser.id).eq('blocked_id', profileId)
+                            await supabase.from('blocked_users').delete().eq('user_id', currentUser.id).eq('blocked_id', profileId)
                             setIsBlocked(false)
                             setBlockType(null)
                             toast.success("User unblocked")
@@ -1145,7 +1145,7 @@ const updateData: Record<string, any> = {
                   if (!currentUser || !profileId) return
                   const supabase = createClient()
                   await supabase.from('blocked_users').insert({ 
-                    blocker_id: currentUser.id, 
+                    user_id: currentUser.id, 
                     blocked_id: profileId,
                     block_type: 'full'
                   })
@@ -1183,7 +1183,7 @@ const updateData: Record<string, any> = {
                   if (!currentUser || !profileId) return
                   const supabase = createClient()
                   await supabase.from('blocked_users').insert({ 
-                    blocker_id: currentUser.id, 
+                    user_id: currentUser.id, 
                     blocked_id: profileId,
                     block_type: 'partial'
                   })

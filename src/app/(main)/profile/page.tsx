@@ -240,7 +240,7 @@ function ProfileContent() {
           supabase.from('friends').select('id').eq('user_id', currentUser.id).eq('friend_id', profileId).maybeSingle(),
           supabase.from('followers').select('id').eq('follower_id', currentUser.id).eq('following_id', profileId).maybeSingle(),
           supabase.from('followers').select('id').eq('follower_id', profileId).eq('following_id', currentUser.id).maybeSingle(),
-          supabase.from('blocked_users').select('id, block_type').eq('blocker_id', currentUser.id).eq('blocked_id', profileId).maybeSingle()
+          supabase.from('blocked_users').select('id, block_type').eq('user_id', currentUser.id).eq('blocked_id', profileId).maybeSingle()
         ])
         setIsFriend(!!friendRes.data)
         setIsFollowing(!!followingRes.data)
@@ -400,7 +400,7 @@ function ProfileContent() {
       
       await supabase.from('notifications').insert({
         user_id: profileId,
-        actor_id: currentUser.id,
+        sender_id: currentUser.id,
         type: 'follow',
         content: 'started following you'
       })
@@ -506,7 +506,7 @@ function ProfileContent() {
                     onClick={async () => {
                       if (!currentUser || !profileId) return
                       const supabase = createClient()
-                      await supabase.from('blocked_users').delete().eq('blocker_id', currentUser.id).eq('blocked_id', profileId)
+                      await supabase.from('blocked_users').delete().eq('user_id', currentUser.id).eq('blocked_id', profileId)
                       setIsBlocked(false)
                       setBlockType(null)
                       toast.success("User unblocked")
@@ -861,7 +861,7 @@ function ProfileContent() {
               onClick={async () => {
                 if (!currentUser || !profileId) return
                 const supabase = createClient()
-                await supabase.from('blocked_users').insert({ blocker_id: currentUser.id, blocked_id: profileId, block_type: 'full' })
+                await supabase.from('blocked_users').insert({ user_id: currentUser.id, blocked_id: profileId, block_type: 'full' })
                 await Promise.all([
                   supabase.from('followers').delete().or(`and(follower_id.eq.${currentUser.id},following_id.eq.${profileId}),and(follower_id.eq.${profileId},following_id.eq.${currentUser.id})`),
                   supabase.from('friends').delete().or(`and(user_id.eq.${currentUser.id},friend_id.eq.${profileId}),and(user_id.eq.${profileId},friend_id.eq.${currentUser.id})`)
@@ -883,7 +883,7 @@ function ProfileContent() {
               onClick={async () => {
                 if (!currentUser || !profileId) return
                 const supabase = createClient()
-                await supabase.from('blocked_users').insert({ blocker_id: currentUser.id, blocked_id: profileId, block_type: 'partial' })
+                await supabase.from('blocked_users').insert({ user_id: currentUser.id, blocked_id: profileId, block_type: 'partial' })
                 await supabase.from('friends').delete().or(`and(user_id.eq.${currentUser.id},friend_id.eq.${profileId}),and(user_id.eq.${profileId},friend_id.eq.${currentUser.id})`)
                 setIsBlocked(true); setBlockType('partial'); setIsFriend(false); setShowBlockDialog(false)
                 toast.success("User interaction blocked")

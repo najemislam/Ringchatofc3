@@ -237,7 +237,7 @@ export default function ChatPage() {
     const { data: existing } = await supabase
       .from('blocked_users')
       .select('id')
-      .eq('blocker_id', user.id)
+      .eq('user_id', user.id)
       .eq('blocked_id', otherUser.id)
       .maybeSingle()
     
@@ -248,7 +248,7 @@ export default function ChatPage() {
     
     // Add to blocked users
     await supabase.from('blocked_users').insert({
-      blocker_id: user.id,
+      user_id: user.id,
       blocked_id: otherUser.id
     })
     

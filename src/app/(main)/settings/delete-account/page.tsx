@@ -49,7 +49,7 @@ export default function DeleteAccountPage() {
     await supabase.from('friends').delete().or(`user_id.eq.${user.id},friend_id.eq.${user.id}`)
     await supabase.from('friend_requests').delete().or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
     await supabase.from('followers').delete().or(`follower_id.eq.${user.id},following_id.eq.${user.id}`)
-    await supabase.from('blocked_users').delete().or(`blocker_id.eq.${user.id},blocked_id.eq.${user.id}`)
+    await supabase.from('blocked_users').delete().or(`user_id.eq.${user.id},blocked_id.eq.${user.id}`)
       await supabase.from('users').delete().eq('id', user.id)
 
     toast.success("Account deleted successfully")

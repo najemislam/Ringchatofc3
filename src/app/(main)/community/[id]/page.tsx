@@ -31,7 +31,7 @@ interface Community {
   name: string
   description: string
   image_url: string | null
-  creator_id: string
+  owner_id: string
   created_at: string
 }
 

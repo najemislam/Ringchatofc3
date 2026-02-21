@@ -34,7 +34,7 @@ export default function CreateCommunityPage() {
       .insert({
         name: name.trim(),
         description: description.trim(),
-        creator_id: user.id
+        owner_id: user.id
       })
       .select()
       .single()

@@ -44,7 +44,7 @@ interface Community {
   name: string
   description: string
   image_url: string | null
-  creator_id: string
+  owner_id: string
   created_at: string
   member_count: number
 }
@@ -96,14 +96,14 @@ export default function FriendsPage() {
       const { data: blockedList } = await supabase
         .from('blocked_users')
         .select('blocked_id')
-        .eq('blocker_id', user.id)
+        .eq('user_id', user.id)
       
       const { data: blockedByList } = await supabase
         .from('blocked_users')
-        .select('blocker_id')
+        .select('user_id')
         .eq('blocked_id', user.id)
 
-      const blockedIds = [...(blockedList?.map(b => b.blocked_id) || []), ...(blockedByList?.map(b => b.blocker_id) || [])]
+      const blockedIds = [...(blockedList?.map(b => b.blocked_id) || []), ...(blockedByList?.map(b => b.user_id) || [])]
   
       const excludeIds = [user.id, ...followingIds, ...blockedIds]
   
@@ -205,7 +205,7 @@ export default function FriendsPage() {
       
       await supabase.from('notifications').insert({
         user_id: targetId,
-        actor_id: user.id,
+        sender_id: user.id,
         type: 'follow',
         content: 'started following you'
       })
@@ -241,7 +241,7 @@ export default function FriendsPage() {
       const supabase = createClient()
       
       const { error } = await supabase.from('blocked_users').upsert({
-        blocker_id: user.id,
+        user_id: user.id,
         blocked_id: targetId
       })
 

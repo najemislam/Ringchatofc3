@@ -41,7 +41,7 @@ export default function SearchPage() {
         toast.success("Following!")
         await supabase.from('notifications').insert({
           user_id: targetId,
-          actor_id: user.id,
+          sender_id: user.id,
           type: 'follow',
           content: 'started following you'
         })

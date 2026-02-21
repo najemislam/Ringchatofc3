@@ -131,7 +131,7 @@ export default function NotificationManager() {
           const { data: actor } = await supabase
             .from("users")
             .select("full_name, profile_picture")
-            .eq("id", newNotif.actor_id)
+            .eq("id", newNotif.sender_id)
             .single();
 
           playSound();
